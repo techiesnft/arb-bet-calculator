@@ -40,14 +40,17 @@
 </head>
 <body>
     <h2>Arbitrage Bet Calculator</h2>
-    <label for="primaryAmount">Primary Bet Amount ($):</label>
-    <input type="number" id="primaryAmount" placeholder="e.g. 300">
+    <label for="teamAAmount">Team A Bet Amount ($):</label>
+    <input type="number" id="teamAAmount" placeholder="e.g. 300">
 
-    <label for="primaryOdds">Primary Odds:</label>
-    <input type="number" step="0.01" id="primaryOdds" placeholder="e.g. 7.0">
+    <label for="teamAOdds">Team A Odds:</label>
+    <input type="number" step="0.01" id="teamAOdds" placeholder="e.g. 7.0">
 
-    <label for="hedgeAmount">Hedge Bet Amount ($):</label>
-    <input type="number" id="hedgeAmount" placeholder="e.g. 400">
+    <label for="teamBAmount">Team B Bet Amount ($):</label>
+    <input type="number" id="teamBAmount" placeholder="e.g. 400">
+
+    <label for="teamBOdds">Team B Odds (optional, leave blank to calculate minimum needed):</label>
+    <input type="number" step="0.01" id="teamBOdds" placeholder="e.g. 5.25">
 
     <button onclick="calculateArbitrage()">Calculate</button>
 
@@ -55,23 +58,36 @@
 
     <script>
         function calculateArbitrage() {
-            const primaryAmount = parseFloat(document.getElementById('primaryAmount').value);
-            const primaryOdds = parseFloat(document.getElementById('primaryOdds').value);
-            const hedgeAmount = parseFloat(document.getElementById('hedgeAmount').value);
+            const teamAAmount = parseFloat(document.getElementById('teamAAmount').value);
+            const teamAOdds = parseFloat(document.getElementById('teamAOdds').value);
+            const teamBAmount = parseFloat(document.getElementById('teamBAmount').value);
+            const teamBOdds = parseFloat(document.getElementById('teamBOdds').value);
 
-            if (isNaN(primaryAmount) || isNaN(primaryOdds) || isNaN(hedgeAmount)) {
-                document.getElementById('result').innerHTML = '<p style="color:red">Please enter all values.</p>';
+            if (isNaN(teamAAmount) || isNaN(teamAOdds) || isNaN(teamBAmount)) {
+                document.getElementById('result').innerHTML = '<p style="color:red">Please fill in all required fields.</p>';
                 return;
             }
 
-            const payout = primaryAmount * primaryOdds;
-            const minHedgeOdds = payout / hedgeAmount;
-
-            document.getElementById('result').innerHTML = `
-                <strong>Primary Bet:</strong> $${primaryAmount} at ${primaryOdds} odds<br>
-                <strong>Potential Payout:</strong> $${payout.toFixed(2)}<br>
-                <strong>Minimum OKC Odds for Profit:</strong> ${minHedgeOdds.toFixed(2)}
+            const payoutA = teamAAmount * teamAOdds;
+            const minTeamBOdds = payoutA / teamBAmount;
+            let resultText = `
+                <strong>Team A Bet:</strong> $${teamAAmount} at ${teamAOdds} odds<br>
+                <strong>Potential Payout (Team A):</strong> $${payoutA.toFixed(2)}<br>
+                <strong>To break even, Team B odds must be greater than:</strong> ${minTeamBOdds.toFixed(2)}<br>
             `;
+
+            if (!isNaN(teamBOdds)) {
+                const payoutB = teamBAmount * teamBOdds;
+                const netProfitA = payoutA - teamBAmount;
+                const netProfitB = payoutB - teamAAmount;
+
+                resultText += `<br><strong>Team B Bet:</strong> $${teamBAmount} at ${teamBOdds} odds<br>`;
+                resultText += `<strong>Potential Payout (Team B):</strong> $${payoutB.toFixed(2)}<br>`;
+                resultText += `<strong>Net Profit if Team A wins:</strong> $${netProfitA.toFixed(2)}<br>`;
+                resultText += `<strong>Net Profit if Team B wins:</strong> $${netProfitB.toFixed(2)}<br>`;
+            }
+
+            document.getElementById('result').innerHTML = resultText;
         }
     </script>
 </body>
