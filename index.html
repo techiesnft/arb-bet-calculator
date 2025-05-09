@@ -24,7 +24,7 @@
       background-color: var(--bg-color);
       background-image: url('bg-character.png');
       background-repeat: no-repeat;
-      background-size: 150px;
+      background-size: 180px;
       background-position: bottom right;
       color: var(--text-color);
       margin: 0;
@@ -36,15 +36,6 @@
       justify-content: center;
       transition: all 0.3s ease;
     }
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(15, 17, 17, 0.4);
-      z-index: -1;
-    }
     .container {
       background: var(--card-color);
       backdrop-filter: blur(10px);
@@ -52,7 +43,7 @@
       padding: 30px;
       width: 90%;
       max-width: 480px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
     h2 {
       text-align: center;
@@ -153,7 +144,6 @@
   </style>
 </head>
 <body>
-  <div class="overlay"></div>
   <div class="theme-toggle">
     <label class="switch">
       <input type="checkbox" onclick="toggleTheme()">
@@ -164,13 +154,13 @@
     <h2>Techies Arb Machine (₱)</h2>
     <p class="subtitle">Enter your bets to instantly see the minimum odds needed to break even.</p>
 
-    <label for="aAmt">Bet on Team A (₱) <span title="Your original bet on the underdog.">ⓘ</span></label>
+    <label for="aAmt">Bet on Team A (₱)</label>
     <input type="number" id="aAmt" placeholder="₱300 (your bet on underdog)" required />
 
-    <label for="aOdds">Team A Odds <span title="Odds for the team you're betting on.">ⓘ</span></label>
+    <label for="aOdds">Team A Odds</label>
     <input type="number" step="0.01" id="aOdds" placeholder="7.0 (your odds on underdog)" required />
 
-    <label for="bAmt">Planned Bet on Team B (₱) <span title="Amount you'd like to bet on favorite to hedge.">ⓘ</span></label>
+    <label for="bAmt">Planned Bet on Team B (₱)</label>
     <input type="number" id="bAmt" placeholder="₱400 (your hedge on favorite)" required />
 
     <button onclick="calcMinimumOdds()">Calculate Minimum Break-even Odds</button>
