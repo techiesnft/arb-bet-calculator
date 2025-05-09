@@ -13,15 +13,19 @@
       --input-bg: rgba(255, 255, 255, 0.05);
     }
     [data-theme="light"] {
-      --bg-color: #f0f0f0;
+      --bg-color: #ffffff;
       --text-color: #111;
-      --card-color: rgba(255, 255, 255, 0.6);
+      --card-color: rgba(255, 255, 255, 0.85);
       --accent: #007a33;
       --input-bg: rgba(0, 0, 0, 0.05);
     }
     body {
       font-family: "Segoe UI", sans-serif;
-      background: var(--bg-color) url('/mnt/data/a5f060ccf1b01967f4b841b39ef03d9b166ae327954103b0e4c4b1011e160c63i0.jpg') center/cover no-repeat fixed;
+      background-color: var(--bg-color);
+      background-image: url('bg-character.jpg');
+      background-repeat: no-repeat;
+      background-size: 150px;
+      background-position: bottom right;
       color: var(--text-color);
       margin: 0;
       padding: 0;
