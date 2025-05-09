@@ -6,25 +6,40 @@
   <title>Techies Arb Machine</title>
   <style>
     :root {
-      --bg-color: #111;
-      --text-color: #f0f0f0;
-      --card-color: #222;
-      --accent: #3d8bfd;
+      --bg-color: #0f1111;
+      --text-color: #e0e0e0;
+      --card-color: rgba(25, 25, 25, 0.7);
+      --accent: #00ff99;
+      --input-bg: rgba(255, 255, 255, 0.05);
     }
     [data-theme="light"] {
-      --bg-color: #f7f7f7;
-      --text-color: #111;
-      --card-color: #fff;
-      --accent: #0056d2;
+      --bg-color: #e8e8e8;
+      --text-color: #121212;
+      --card-color: rgba(255, 255, 255, 0.6);
+      --accent: #007a33;
+      --input-bg: rgba(0, 0, 0, 0.05);
     }
     body {
       font-family: "Segoe UI", sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
-      max-width: 480px;
-      margin: auto;
-      padding: 30px 20px;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       transition: all 0.3s ease;
+    }
+    .container {
+      background: var(--card-color);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
     h2 {
       text-align: center;
@@ -39,9 +54,9 @@
       padding: 10px;
       width: 100%;
       margin-top: 5px;
-      background: var(--card-color);
+      background: var(--input-bg);
       color: var(--text-color);
-      border: 1px solid #555;
+      border: 1px solid #444;
       border-radius: 5px;
       transition: all 0.2s;
     }
@@ -50,62 +65,94 @@
       padding: 12px;
       margin-top: 25px;
       background: var(--accent);
-      color: white;
+      color: #000;
       font-size: 16px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-weight: bold;
       transition: background 0.3s;
-    }
-    button:hover {
-      background: #1f6fe1;
     }
     #result {
       margin-top: 25px;
-      background: var(--card-color);
+      background: var(--input-bg);
       padding: 15px;
-      border-radius: 8px;
+      border-radius: 10px;
       line-height: 1.6;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "🌙";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
       text-align: center;
-      margin-top: 20px;
       font-size: 14px;
     }
-    .theme-toggle button {
-      width: auto;
-      padding: 6px 12px;
-      margin-top: 10px;
-      font-size: 14px;
-      background: transparent;
-      border: 1px solid var(--accent);
-      color: var(--accent);
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+    input:checked + .slider:before {
+      transform: translateX(24px);
+      content: "☀️";
     }
   </style>
 </head>
 <body>
-  <h2>Techies Arb Machine (₱)</h2>
-
-  <label for="aAmt">Bet on Team A (₱)</label>
-  <input type="number" id="aAmt" placeholder="e.g. 300" />
-
-  <label for="aOdds">Team A Odds</label>
-  <input type="number" step="0.01" id="aOdds" placeholder="e.g. 7.0" />
-
-  <label for="bOdds">Team B Odds</label>
-  <input type="number" step="0.01" id="bOdds" placeholder="e.g. 5.25" />
-
-  <label for="bAmt">Optional: Your Planned Bet on Team B (₱)</label>
-  <input type="number" id="bAmt" placeholder="e.g. 400" />
-
-  <button onclick="calcArb()">Calculate</button>
-
-  <div id="result"></div>
-
   <div class="theme-toggle">
-    <p>Toggle Theme</p>
-    <button onclick="toggleTheme()">Switch Light/Dark Mode</button>
+    <label class="switch">
+      <input type="checkbox" onclick="toggleTheme()">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="container">
+    <h2>Techies Arb Machine (₱)</h2>
+    <label for="aAmt">Bet on Team A (₱)</label>
+    <input type="number" id="aAmt" placeholder="e.g. 300" />
+
+    <label for="aOdds">Team A Odds</label>
+    <input type="number" step="0.01" id="aOdds" placeholder="e.g. 7.0" />
+
+    <label for="bOdds">Team B Odds</label>
+    <input type="number" step="0.01" id="bOdds" placeholder="e.g. 5.25" />
+
+    <label for="bAmt">Optional: Your Planned Bet on Team B (₱)</label>
+    <input type="number" id="bAmt" placeholder="e.g. 400" />
+
+    <button onclick="calcArb()">Calculate</button>
+    <div id="result"></div>
   </div>
 
   <script>
@@ -116,21 +163,23 @@
       const bAmt = parseFloat(document.getElementById('bAmt').value);
 
       if (isNaN(aAmt) || isNaN(aOdds) || isNaN(bOdds)) {
-        document.getElementById('result').innerHTML = '<p style="color:red">Please enter Team A bet, Team A odds, and Team B odds.</p>';
+        document.getElementById('result').innerHTML = '<p style="color:red">Enter Team A amount, odds, and Team B odds.</p>';
         return;
       }
 
       const payoutA = aAmt * aOdds;
       const idealBAmt = payoutA / bOdds;
+      const minBOdds = payoutA / (bAmt || 1);
 
-      let output = `<strong>Team A:</strong> ₱${aAmt} at ${aOdds} = ₱${payoutA.toFixed(2)}<br/>`;
-      output += `<strong>To perfectly hedge, bet:</strong> ₱${idealBAmt.toFixed(2)} on Team B at ${bOdds} odds<br/>`;
+      let output = `<strong>Team A Potential Winnings:</strong> ₱${payoutA.toFixed(2)}<br/>`;
+      output += `<strong>To perfectly hedge:</strong> Bet ₱${idealBAmt.toFixed(2)} on Team B at ${bOdds} odds<br/>`;
 
       if (!isNaN(bAmt)) {
         const payoutB = bAmt * bOdds;
         const netA = payoutA - bAmt;
         const netB = payoutB - aAmt;
-        output += `<br/><strong>Your Team B Bet:</strong> ₱${bAmt} at ${bOdds} = ₱${payoutB.toFixed(2)}<br/>`;
+        output += `<br/><strong>Minimum Team B odds to break even:</strong> ${minBOdds.toFixed(2)}<br/>`;
+        output += `<strong>Your Team B Bet:</strong> ₱${bAmt} at ${bOdds} = ₱${payoutB.toFixed(2)}<br/>`;
         output += `<strong>Profit if Team A wins:</strong> ₱${netA.toFixed(2)}<br/>`;
         output += `<strong>Profit if Team B wins:</strong> ₱${netB.toFixed(2)}<br/>`;
       }
@@ -139,13 +188,12 @@
     }
 
     function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute("data-theme");
-      if (currentTheme === "light") {
-        document.documentElement.setAttribute("data-theme", "dark");
-      } else {
-        document.documentElement.setAttribute("data-theme", "light");
-      }
+      const current = document.documentElement.getAttribute("data-theme");
+      document.documentElement.setAttribute("data-theme", current === "light" ? "dark" : "light");
     }
+
+    // Set default to dark mode
+    document.documentElement.setAttribute("data-theme", "dark");
   </script>
 </body>
 </html>
