@@ -1,94 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Arbitrage Bet Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f5f5f5;
-            max-width: 600px;
-            margin: auto;
-        }
-        label, input {
-            display: block;
-            margin-top: 10px;
-        }
-        input {
-            padding: 5px;
-            width: 100%;
-        }
-        button {
-            margin-top: 15px;
-            padding: 10px;
-            width: 100%;
-            background-color: #2d89ef;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        #result {
-            margin-top: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Techies Arb Machine</title>
+  <style>
+    :root {
+      --bg-color: #111;
+      --text-color: #f0f0f0;
+      --card-color: #222;
+      --accent: #3d8bfd;
+    }
+    [data-theme="light"] {
+      --bg-color: #f7f7f7;
+      --text-color: #111;
+      --card-color: #fff;
+      --accent: #0056d2;
+    }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      max-width: 480px;
+      margin: auto;
+      padding: 30px 20px;
+      transition: all 0.3s ease;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      margin-top: 15px;
+      font-weight: 600;
+      display: block;
+    }
+    input {
+      padding: 10px;
+      width: 100%;
+      margin-top: 5px;
+      background: var(--card-color);
+      color: var(--text-color);
+      border: 1px solid #555;
+      border-radius: 5px;
+      transition: all 0.2s;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 25px;
+      background: var(--accent);
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #1f6fe1;
+    }
+    #result {
+      margin-top: 25px;
+      background: var(--card-color);
+      padding: 15px;
+      border-radius: 8px;
+      line-height: 1.6;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .theme-toggle {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    .theme-toggle button {
+      width: auto;
+      padding: 6px 12px;
+      margin-top: 10px;
+      font-size: 14px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+  </style>
 </head>
 <body>
-    <h2>Arbitrage Bet Calculator</h2>
-    <label for="teamAAmount">Team A Bet Amount ($):</label>
-    <input type="number" id="teamAAmount" placeholder="e.g. 300">
+  <h2>Techies Arb Machine (₱)</h2>
 
-    <label for="teamAOdds">Team A Odds:</label>
-    <input type="number" step="0.01" id="teamAOdds" placeholder="e.g. 7.0">
+  <label for="aAmt">Bet on Team A (₱)</label>
+  <input type="number" id="aAmt" placeholder="e.g. 300" />
 
-    <label for="teamBAmount">Team B Bet Amount ($):</label>
-    <input type="number" id="teamBAmount" placeholder="e.g. 400">
+  <label for="aOdds">Team A Odds</label>
+  <input type="number" step="0.01" id="aOdds" placeholder="e.g. 7.0" />
 
-    <label for="teamBOdds">Team B Odds (optional, leave blank to calculate minimum needed):</label>
-    <input type="number" step="0.01" id="teamBOdds" placeholder="e.g. 5.25">
+  <label for="bOdds">Team B Odds</label>
+  <input type="number" step="0.01" id="bOdds" placeholder="e.g. 5.25" />
 
-    <button onclick="calculateArbitrage()">Calculate</button>
+  <label for="bAmt">Optional: Your Planned Bet on Team B (₱)</label>
+  <input type="number" id="bAmt" placeholder="e.g. 400" />
 
-    <div id="result"></div>
+  <button onclick="calcArb()">Calculate</button>
 
-    <script>
-        function calculateArbitrage() {
-            const teamAAmount = parseFloat(document.getElementById('teamAAmount').value);
-            const teamAOdds = parseFloat(document.getElementById('teamAOdds').value);
-            const teamBAmount = parseFloat(document.getElementById('teamBAmount').value);
-            const teamBOdds = parseFloat(document.getElementById('teamBOdds').value);
+  <div id="result"></div>
 
-            if (isNaN(teamAAmount) || isNaN(teamAOdds) || isNaN(teamBAmount)) {
-                document.getElementById('result').innerHTML = '<p style="color:red">Please fill in all required fields.</p>';
-                return;
-            }
+  <div class="theme-toggle">
+    <p>Toggle Theme</p>
+    <button onclick="toggleTheme()">Switch Light/Dark Mode</button>
+  </div>
 
-            const payoutA = teamAAmount * teamAOdds;
-            const minTeamBOdds = payoutA / teamBAmount;
-            let resultText = `
-                <strong>Team A Bet:</strong> $${teamAAmount} at ${teamAOdds} odds<br>
-                <strong>Potential Payout (Team A):</strong> $${payoutA.toFixed(2)}<br>
-                <strong>To break even, Team B odds must be greater than:</strong> ${minTeamBOdds.toFixed(2)}<br>
-            `;
+  <script>
+    function calcArb() {
+      const aAmt = parseFloat(document.getElementById('aAmt').value);
+      const aOdds = parseFloat(document.getElementById('aOdds').value);
+      const bOdds = parseFloat(document.getElementById('bOdds').value);
+      const bAmt = parseFloat(document.getElementById('bAmt').value);
 
-            if (!isNaN(teamBOdds)) {
-                const payoutB = teamBAmount * teamBOdds;
-                const netProfitA = payoutA - teamBAmount;
-                const netProfitB = payoutB - teamAAmount;
+      if (isNaN(aAmt) || isNaN(aOdds) || isNaN(bOdds)) {
+        document.getElementById('result').innerHTML = '<p style="color:red">Please enter Team A bet, Team A odds, and Team B odds.</p>';
+        return;
+      }
 
-                resultText += `<br><strong>Team B Bet:</strong> $${teamBAmount} at ${teamBOdds} odds<br>`;
-                resultText += `<strong>Potential Payout (Team B):</strong> $${payoutB.toFixed(2)}<br>`;
-                resultText += `<strong>Net Profit if Team A wins:</strong> $${netProfitA.toFixed(2)}<br>`;
-                resultText += `<strong>Net Profit if Team B wins:</strong> $${netProfitB.toFixed(2)}<br>`;
-            }
+      const payoutA = aAmt * aOdds;
+      const idealBAmt = payoutA / bOdds;
 
-            document.getElementById('result').innerHTML = resultText;
-        }
-    </script>
+      let output = `<strong>Team A:</strong> ₱${aAmt} at ${aOdds} = ₱${payoutA.toFixed(2)}<br/>`;
+      output += `<strong>To perfectly hedge, bet:</strong> ₱${idealBAmt.toFixed(2)} on Team B at ${bOdds} odds<br/>`;
+
+      if (!isNaN(bAmt)) {
+        const payoutB = bAmt * bOdds;
+        const netA = payoutA - bAmt;
+        const netB = payoutB - aAmt;
+        output += `<br/><strong>Your Team B Bet:</strong> ₱${bAmt} at ${bOdds} = ₱${payoutB.toFixed(2)}<br/>`;
+        output += `<strong>Profit if Team A wins:</strong> ₱${netA.toFixed(2)}<br/>`;
+        output += `<strong>Profit if Team B wins:</strong> ₱${netB.toFixed(2)}<br/>`;
+      }
+
+      document.getElementById('result').innerHTML = output;
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      if (currentTheme === "light") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    }
+  </script>
 </body>
 </html>
